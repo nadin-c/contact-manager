@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
+import { useNavigate } from 'react-router-dom';
 import copy from 'copy-to-clipboard';
-import { 
-    FaUser, FaBuilding, FaPhone, FaEnvelope, FaCalendar, 
+import {
+    FaUser, FaBuilding, FaPhone, FaEnvelope, FaCalendar,
     FaLinkedin, FaTwitter, FaFacebook, FaInstagram,
     FaLink, FaHashtag, FaFont, FaDownload, FaShare,
-    FaQrcode, FaCopy, FaWhatsapp, FaTelegram
+    FaQrcode, FaCopy, FaWhatsapp, FaTelegram, FaEye
 } from 'react-icons/fa';
 import {
     WhatsappShareButton,
@@ -27,6 +28,7 @@ const PublicCard = () => {
     const [showQR, setShowQR] = useState(false);
     const [showShareOptions, setShowShareOptions] = useState(false);
     const [copySuccess, setCopySuccess] = useState(false);
+    const navigate = useNavigate();
 
     const currentUrl = window.location.href;
 
@@ -59,8 +61,8 @@ ${contactData.company ? `ORG:${contactData.company}` : ''}
 ${contactData.phones.map(phone => `TEL;TYPE=${phone.label}:${phone.number}`).join('\n')}
 ${contactData.emails.map(email => `EMAIL;TYPE=${email.label}:${email.address}`).join('\n')}
 ${Object.entries(contactData.socialMedia)
-    .filter(([_, url]) => url)
-    .map(([platform, url]) => `URL;TYPE=${platform}:${url}`).join('\n')}
+                .filter(([_, url]) => url)
+                .map(([platform, url]) => `URL;TYPE=${platform}:${url}`).join('\n')}
 ${contactData.customFields.map(field => `X-${field.label}:${field.value}`).join('\n')}
 END:VCARD`;
 
@@ -130,9 +132,9 @@ END:VCARD`;
                                 {contactData.company}
                             </div>
                         )}
-                        
+
                         <div className="mt-4 d-flex justify-content-center gap-3">
-                            <button 
+                            <button
                                 className="btn btn-light btn-lg rounded-pill px-4"
                                 onClick={generateVCard}
                             >
@@ -141,7 +143,7 @@ END:VCARD`;
                             </button>
 
                             <div className="dropdown">
-                                <button 
+                                <button
                                     className="btn btn-light btn-lg rounded-pill px-4"
                                     onClick={() => setShowShareOptions(!showShareOptions)}
                                 >
@@ -151,44 +153,44 @@ END:VCARD`;
                                 {showShareOptions && (
                                     <div className="dropdown-menu show p-3" style={{ minWidth: '300px' }}>
                                         <h6 className="dropdown-header">Share via</h6>
-                                        
+
                                         <div className="d-flex justify-content-around mb-3">
                                             <WhatsappShareButton url={currentUrl}>
                                                 <WhatsappIcon size={40} round />
                                             </WhatsappShareButton>
-                                            
+
                                             <TelegramShareButton url={currentUrl}>
                                                 <TelegramIcon size={40} round />
                                             </TelegramShareButton>
-                                            
+
                                             <LinkedinShareButton url={currentUrl}>
                                                 <LinkedinIcon size={40} round />
                                             </LinkedinShareButton>
-                                            
+
                                             <EmailShareButton url={currentUrl}>
                                                 <EmailIcon size={40} round />
                                             </EmailShareButton>
                                         </div>
 
                                         <div className="dropdown-divider"></div>
-                                        
-                                        <button 
+
+                                        <button
                                             className="dropdown-item d-flex align-items-center"
                                             onClick={() => setShowQR(!showQR)}
                                         >
                                             <FaQrcode className="me-2" /> Show QR Code
                                         </button>
-                                        
-                                        <button 
+
+                                        <button
                                             className="dropdown-item d-flex align-items-center"
                                             onClick={handleCopyLink}
                                         >
-                                            <FaCopy className="me-2" /> 
+                                            <FaCopy className="me-2" />
                                             {copySuccess ? 'Copied!' : 'Copy Link'}
                                         </button>
 
                                         {navigator.share && (
-                                            <button 
+                                            <button
                                                 className="dropdown-item d-flex align-items-center"
                                                 onClick={handleNativeShare}
                                             >
@@ -198,6 +200,17 @@ END:VCARD`;
                                     </div>
                                 )}
                             </div>
+
+                            {/* <button
+                                type="button"
+                                className="btn btn-light btn-lg rounded-pill d-flex align-items-center justify-content-center px-4"
+                                style={{ gap: '5px' }}
+                                onClick={() => { navigate(`/previewCard/${userId}`) }}
+                            >
+                                <FaEye />
+                                Preview Card
+                            </button> */}
+
                         </div>
 
                         {showQR && (
@@ -215,8 +228,8 @@ END:VCARD`;
                     <div className="row g-4 mb-5">
                         {contactData.phones[0] && (
                             <div className="col-md-6">
-                                <a href={`tel:${contactData.phones[0].number}`} 
-                                   className="btn btn-outline-primary w-100 p-4 rounded-3">
+                                <a href={`tel:${contactData.phones[0].number}`}
+                                    className="btn btn-outline-primary w-100 p-4 rounded-3">
                                     <FaPhone className="me-2" size={24} />
                                     Call Primary Number
                                 </a>
@@ -225,7 +238,7 @@ END:VCARD`;
                         {contactData.emails[0] && (
                             <div className="col-md-6">
                                 <a href={`mailto:${contactData.emails[0].address}`}
-                                   className="btn btn-outline-primary w-100 p-4 rounded-3">
+                                    className="btn btn-outline-primary w-100 p-4 rounded-3">
                                     <FaEnvelope className="me-2" size={24} />
                                     Send Email
                                 </a>
@@ -276,10 +289,10 @@ END:VCARD`;
                                         }[platform];
                                         return (
                                             <div key={platform} className="col-6">
-                                                <a href={url} 
-                                                   target="_blank" 
-                                                   rel="noopener noreferrer"
-                                                   className={`btn btn-outline-${platform} w-100 d-flex flex-column align-items-center gap-2`}>
+                                                <a href={url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className={`btn btn-outline-${platform} w-100 d-flex flex-column align-items-center gap-2`}>
                                                     <Icon size={30} />
                                                     <span className="fs-5 mt-2">
                                                         {platform.charAt(0).toUpperCase() + platform.slice(1)}
@@ -302,7 +315,7 @@ END:VCARD`;
                                     <div key={index} className="mb-3">
                                         <div className="text-muted small">{date.label}</div>
                                         <div className="fs-5 d-flex align-items-center">
-                                        <FaCalendar className="me-2 text-primary" />
+                                            <FaCalendar className="me-2 text-primary" />
                                             {date.date}
                                         </div>
                                     </div>
@@ -324,10 +337,10 @@ END:VCARD`;
                                             <div className="fs-5 d-flex align-items-center">
                                                 <IconComponent className="me-2 text-primary" />
                                                 {field.type === 'URL' ? (
-                                                    <a href={field.value} 
-                                                       target="_blank" 
-                                                       rel="noopener noreferrer" 
-                                                       className="text-decoration-none">
+                                                    <a href={field.value}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="text-decoration-none">
                                                         {field.value}
                                                     </a>
                                                 ) : (
@@ -335,7 +348,8 @@ END:VCARD`;
                                                 )}
                                             </div>
                                         </div>
-                                    )}
+                                    )
+                                }
                                 )}
                             </div>
                         </div>
@@ -347,4 +361,3 @@ END:VCARD`;
 };
 
 export default PublicCard;
-

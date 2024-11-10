@@ -6,6 +6,7 @@ import Register from "./pages/Register";
 import ContactForm from "./pages/ContactForm";
 import PublicCard from "./pages/PublicCard";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PreviewCard from "./pages/PreviewCard";
 
 const App = () => (
     <Router>
@@ -14,6 +15,7 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/card/:userId" element={<PublicCard />} />
+            <Route path="/previewCard/:userId" element={<PreviewCard />} />
             <Route
                 path="/contact-form"
                 element={
